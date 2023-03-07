@@ -6,8 +6,8 @@
     <scriptTask id="scripttask" name="prepareWorkflow" scriptFormat="groovy" flowable:autoStoreVariables="false">
         <script><![CDATA[
           def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.subprocess')
-          logger.info("subProcess - scripttask, value for key2 is: [" + key2 + "] (should be same as value for parent key1)")
-          logger.info("subProcess - scripttask, value for mtemplateId is: [" + mtemplateId + "] (should be same as value for parent key1)")
+          logger.info("subProcess - scripttask, value for key2 is: [" + key2 + "] (should be same as value for parent key1 [value1])")
+          logger.info("subProcess - scripttask, value for mtemplateId is: [" + mtemplateId + "] (should be same as value for parent key1 [value1])")
         ]]>
         </script>
     </scriptTask>

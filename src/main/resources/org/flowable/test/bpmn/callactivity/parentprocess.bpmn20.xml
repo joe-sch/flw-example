@@ -20,15 +20,17 @@
             <flowable:in source="key1" target="key2"/>
             <flowable:in source="key1" target="mtemplateId"/>
             <flowable:out source="key2" target="key3"/>
+            <flowable:out source="mtemplateId" target="newkey"/>
         </extensionElements>
     </callActivity>
 
     <scriptTask id="aftercallactiviti" name="aftercallactiviti" scriptFormat="groovy" flowable:autoStoreVariables="false">
         <script><![CDATA[
           def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.parentprocess')
-          logger.info("parentProcess - aftercallactiviti value for key1 is: [" + key1 + "] expected is value1")
-          logger.info("parentProcess - aftercallactiviti value for key2 is: [" + key2 + "] expected is value2")
-          logger.info("parentProcess - aftercallactiviti value for key3 is: [" + key3 + "] expected is value1")
+          logger.info("parentProcess - aftercallactiviti value for key1 is: [" + key1 + "] expected is [value1]")
+          logger.info("parentProcess - aftercallactiviti value for key2 is: [" + key2 + "] expected is [value2]")
+          logger.info("parentProcess - aftercallactiviti value for key3 is: [" + key3 + "] expected is [value1]")
+          logger.info("parentProcess - aftercallactiviti value for newkey is: [" + newkey + "] expected is [value1]")
         ]]>
         </script>
     </scriptTask>
