@@ -5,10 +5,9 @@
     <endEvent id="end"/>
     <scriptTask id="scripttask" name="prepareWorkflow" scriptFormat="groovy" flowable:autoStoreVariables="false">
         <script><![CDATA[
-          System.out.println("subProcess key2 (should be same as parent key1)\t\t\t\t\t\t expected: value1, is: " + key2)
-          //System.out.println("subProcess execution.getVariable(key2) -> (should be same as parent key1) : " + execution.getVariable("key2"))
-          System.out.println("subProcess mtemplateId (should be same as parent key1)\t\t\t\t\t expected: value1, is: " + mtemplateId)
-          //System.out.println("subProcess execution.getVariable(mtemplateId) -> (should be same as parent key1)\t : " + execution.getVariable("mtemplateId"))
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.subprocess')
+          logger.info("subProcess - scripttask, value for key2 is: [" + key2 + "] (should be same as value for parent key1)")
+          logger.info("subProcess - scripttask, value for mtemplateId is: [" + mtemplateId + "] (should be same as value for parent key1)")
         ]]>
         </script>
     </scriptTask>

@@ -4,12 +4,13 @@
 
     <startEvent id="starevent"/>
 
-    <scriptTask id="prepareWorkflow" name="prepareWorkflow" scriptFormat="groovy" flowable:autoStoreVariables="false">
+    <scriptTask id="starttask" name="starttask" scriptFormat="groovy" flowable:autoStoreVariables="false">
         <script><![CDATA[
-           execution.setVariable("key1", "value1")
-           execution.setVariable("key2", "value2")
-          System.out.println("parentProcess key1 \t\t\t\t\t\t\t\t\t\t\t   is: " + key1)
-          System.out.println("parentProcess key2 \t\t\t\t\t\t\t\t\t\t\t   is: " + key2)
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.parentprocess')
+          execution.setVariable("key1", "value1")
+          execution.setVariable("key2", "value2")
+          logger.info("parentProcess - starttask, value for key1 is: [" + key1 + "]")
+          logger.info("parentProcess - starttask, value for key2 is: [" + key2 + "]")
         ]]>
         </script>
     </scriptTask>
@@ -24,16 +25,17 @@
 
     <scriptTask id="aftercallactiviti" name="aftercallactiviti" scriptFormat="groovy" flowable:autoStoreVariables="false">
         <script><![CDATA[
-          System.out.println("parentProcess, after callactivity key1 \t\t\t\t\t\t\t expected: value1, is: " + key1)
-          System.out.println("parentProcess, after callactivity key2 \t\t\t\t\t\t\t expected: value2, is: " + key2)
-          System.out.println("parentProcess, after callactivity key3 (should be equals key1) \t\t\t\t expected: value1, is: " + key3)
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.parentprocess')
+          logger.info("parentProcess - aftercallactiviti value for key1 is: [" + key1 + "] expected is value1")
+          logger.info("parentProcess - aftercallactiviti value for key2 is: [" + key2 + "] expected is value2")
+          logger.info("parentProcess - aftercallactiviti value for key3 is: [" + key3 + "] expected is value1")
         ]]>
         </script>
     </scriptTask>
     <endEvent id="endevent"/>
 
-    <sequenceFlow id="flow001" sourceRef="starevent" targetRef="prepareWorkflow"/>
-    <sequenceFlow id="flow002" sourceRef="prepareWorkflow" targetRef="callActiviti"/>
+    <sequenceFlow id="flow001" sourceRef="starevent" targetRef="starttask"/>
+    <sequenceFlow id="flow002" sourceRef="starttask" targetRef="callActiviti"/>
     <sequenceFlow id="flow005" sourceRef="callActiviti" targetRef="aftercallactiviti"/>
     <sequenceFlow id="flow010" sourceRef="aftercallactiviti" targetRef="endevent"/>
 
@@ -43,7 +45,7 @@
       <bpmndi:BPMNShape id="shape-22d30eef-8e3b-4e91-921f-6dd6c313ed20" bpmnElement="starevent">
         <omgdc:Bounds x="-145.0" y="-25.0" width="30.0" height="30.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape-c253020e-d11b-4737-ae0d-ca99d8a61cab" bpmnElement="prepareWorkflow">
+      <bpmndi:BPMNShape id="shape-c253020e-d11b-4737-ae0d-ca99d8a61cab" bpmnElement="starttask">
         <omgdc:Bounds x="-50.0" y="-50.0" width="100.0" height="80.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge-261e4a63-75d4-469a-849e-d155a7f6a0b0" bpmnElement="flow001">
