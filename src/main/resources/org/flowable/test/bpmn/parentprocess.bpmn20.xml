@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="parentprocess" name="parentprocess" isExecutable="true">
+
+    <startEvent id="starevent"/>
+
+    <scriptTask id="prepareWorkflow" name="prepareWorkflow" scriptFormat="groovy" activiti:autoStoreVariables="false">
+        <script><![CDATA[
+           execution.setVariable("key1", "value1")
+           execution.setVariable("key2", "value2")
+          System.out.println("parentProcess key1 \t\t\t\t\t\t\t\t\t\t\t   is: " + key1)
+          System.out.println("parentProcess key2 \t\t\t\t\t\t\t\t\t\t\t   is: " + key2)
+        ]]>
+        </script>
+    </scriptTask>
+
+    <callActivity id="callActiviti" name="callSubProcess" calledElement="subprocess" activiti:inheritVariables="false">
+        <extensionElements>
+            <activiti:in source="key1" target="key2"/>
+            <activiti:in source="key1" target="mtemplateId"/>
+            <activiti:out source="key2" target="key3"/>
+        </extensionElements>
+    </callActivity>
+
+    <scriptTask id="aftercallactiviti" name="aftercallactiviti" scriptFormat="groovy" activiti:autoStoreVariables="false">
+        <script><![CDATA[
+          System.out.println("parentProcess, after callactivity key1 \t\t\t\t\t\t\t expected: value1, is: " + key1)
+          System.out.println("parentProcess, after callactivity key2 \t\t\t\t\t\t\t expected: value2, is: " + key2)
+          System.out.println("parentProcess, after callactivity key3 (should be equals key1) \t\t\t\t expected: value1, is: " + key3)
+        ]]>
+        </script>
+    </scriptTask>
+    <endEvent id="endevent"/>
+
+    <sequenceFlow id="flow001" sourceRef="starevent" targetRef="prepareWorkflow"/>
+    <sequenceFlow id="flow002" sourceRef="prepareWorkflow" targetRef="callActiviti"/>
+    <sequenceFlow id="flow005" sourceRef="callActiviti" targetRef="aftercallactiviti"/>
+    <sequenceFlow id="flow010" sourceRef="aftercallactiviti" targetRef="endevent"/>
+
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_">
+    <bpmndi:BPMNPlane bpmnElement="parentprocess" id="BPMNPlane_">
+      <bpmndi:BPMNShape id="shape-22d30eef-8e3b-4e91-921f-6dd6c313ed20" bpmnElement="starevent">
+        <omgdc:Bounds x="-145.0" y="-25.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-c253020e-d11b-4737-ae0d-ca99d8a61cab" bpmnElement="prepareWorkflow">
+        <omgdc:Bounds x="-50.0" y="-50.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-261e4a63-75d4-469a-849e-d155a7f6a0b0" bpmnElement="flow001">
+        <omgdi:waypoint x="-115.0" y="-10.0"/>
+        <omgdi:waypoint x="-50.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-a31f8c8c-aca4-4b87-a511-2b6a6bf072cd" bpmnElement="callActiviti">
+        <omgdc:Bounds x="100.0" y="-50.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-15bf8c2b-1df9-42d8-8b15-5ebf21165c23" bpmnElement="flow002">
+        <omgdi:waypoint x="50.0" y="-10.0"/>
+        <omgdi:waypoint x="100.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-2c4995eb-89c1-4a24-bf91-31b8c3993fae" bpmnElement="aftercallactiviti">
+        <omgdc:Bounds x="245.0" y="-50.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-fcb2cfce-694a-4f21-aba2-29a56992b6af" bpmnElement="endevent">
+        <omgdc:Bounds x="395.0" y="-25.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-09c3ba97-96d3-48c1-bc9a-6d393d0b4623" bpmnElement="flow005">
+        <omgdi:waypoint x="200.0" y="-10.0"/>
+        <omgdi:waypoint x="245.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-8a350b4a-2320-48ce-af75-56910d4341ae" bpmnElement="flow010">
+        <omgdi:waypoint x="345.0" y="-10.0"/>
+        <omgdi:waypoint x="395.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

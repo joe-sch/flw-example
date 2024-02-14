@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="testdeletesub1flow" name="testdeletesub1flow" isExecutable="true">
+    <startEvent id="start"></startEvent>
+
+    <scriptTask id="sub1flowstart" name="sub1flowstart" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.testdeletesub1flow")
+                System.out.println("testdeletesub1flow - sub1flowstart: "+execution.getProcessInstanceId())
+                logger.info("testdeletesub1flow - sub1flowstart: "+execution.getProcessInstanceId())
+        ]]>
+      </script>
+    </scriptTask>
+    <userTask id="usertask" name="usertask"/>
+
+
+    <scriptTask id="leavingsubflow1" name="leavingsubflow1" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.testdeletesub1flow")
+                System.out.println("testdeletesub1flow - leavingsubflow1")
+                logger.info("testdeletesub1flow - leavingsubflow1")
+        ]]>
+      </script>
+    </scriptTask>
+    <sequenceFlow id="start-sub1flowstart" sourceRef="start" targetRef="sub1flowstart"/>
+    <sequenceFlow id="sub1flowstart-usertask" sourceRef="sub1flowstart" targetRef="usertask"/>
+    <sequenceFlow id="usertask-leavingsubflow1" sourceRef="usertask" targetRef="leavingsubflow1"/>
+    <sequenceFlow id="leavingsubflow1-end" sourceRef="leavingsubflow1" targetRef="end"/>
+    <endEvent id="end"/>
+  </process>
+</definitions>

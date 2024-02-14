@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="testdeleteparentflow" name="testdeleteparentflow" isExecutable="true">
+
+    <startEvent id="starevent"/>
+
+    <scriptTask id="starttask" name="starttask" scriptFormat="groovy" activiti:autoStoreVariables="false">
+        <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.testdeleteparentflow")
+                System.out.println("parentProcess - starttask: "+execution.getProcessInstanceId())
+                logger.info("parentProcess - starttask: "+execution.getProcessInstanceId())
+        ]]>
+        </script>
+    </scriptTask>
+
+    <callActivity id="callActiviti1" name="callSub1Process" calledElement="testdeletesub1flow" activiti:inheritVariables="false"/>
+
+
+    <scriptTask id="aftercallactiviti1" name="aftercallactiviti1" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.testdeleteparentflow")
+                System.out.println("parentProcess - aftercallactiviti1")
+                logger.info("parentProcess - aftercallactiviti1")
+        ]]>
+      </script>
+    </scriptTask>
+
+    <callActivity id="callActiviti2" name="callSub2Process" calledElement="testdeletesub2flow" activiti:inheritVariables="false"/>
+
+    <scriptTask id="aftercallactiviti2" name="aftercallactiviti2" scriptFormat="groovy" activiti:autoStoreVariables="false">
+        <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.testdeleteparentflow")
+                System.out.println("parentProcess - aftercallactiviti2")
+                logger.info("parentProcess - aftercallactiviti2")
+        ]]>
+        </script>
+    </scriptTask>
+    <endEvent id="endevent"/>
+
+    <sequenceFlow id="flow001" sourceRef="starevent" targetRef="starttask"/>
+    <sequenceFlow id="flow005" sourceRef="starttask" targetRef="callActiviti1"/>
+    <sequenceFlow id="flow0010" sourceRef="callActiviti1" targetRef="aftercallactiviti1"/>
+    <sequenceFlow id="flow0015" sourceRef="aftercallactiviti1" targetRef="callActiviti2"/>
+    <sequenceFlow id="flow0020" sourceRef="callActiviti2" targetRef="aftercallactiviti2"/>
+    <sequenceFlow id="flow0025" sourceRef="aftercallactiviti2" targetRef="endevent"/>
+  </process>
+</definitions>

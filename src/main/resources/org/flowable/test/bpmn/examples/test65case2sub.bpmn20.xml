@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="subProcess2" name="subProcess2" isExecutable="true">
+    <startEvent id="start"/>
+
+    <scriptTask id="scripttask" name="scripttask" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.subProcess2")
+                System.out.println("subProcess2 - scripttask")
+                logger.info("subProcess2 - scripttask")
+        ]]>
+      </script>
+    </scriptTask>
+
+
+    <userTask id="usertask" name="usertask">
+      <extensionElements>
+        <activiti:taskListener event="create" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[
+                            groovy
+                            ]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.subProcess2")
+                System.out.println("usertask - taskListener - create")
+                logger.info('usertask - taskListener - create')
+                ]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[
+                            groovy
+                            ]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.subProcess2")
+                System.out.println("usertask - taskListener - complete")
+                logger.info('usertask - taskListener - complete')
+              ]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="start-script" sourceRef="start" targetRef="scripttask"/>
+    <sequenceFlow id="start-usertask" sourceRef="scripttask" targetRef="usertask"/>
+    <sequenceFlow id="usertask-end" sourceRef="usertask" targetRef="end"/>
+    <endEvent id="end"/>
+  </process>
+</definitions>

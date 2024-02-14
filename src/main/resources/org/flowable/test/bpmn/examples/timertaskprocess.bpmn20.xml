@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="timertaskprocess" name="timertaskprocess" isExecutable="true">
+    <startEvent id="starevent"/>
+    <scriptTask id="starttask" name="starttask" scriptFormat="groovy" flowable:autoStoreVariables="false">
+      <script><![CDATA[
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.timertaskprocess')
+          Date date = Calendar.getInstance().getTime();
+          java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+          String strDate = dateFormat.format(date);
+
+          String proc = java.util.UUID.randomUUID().toString();
+          execution.setVariable("proc", proc)
+
+          def digIdentity = openidm.read("managed/DigitalIdentity/12345");
+          System.out.println("digIdentity !!!!!!!!! "+digIdentity);
+
+          logger.info(strDate+": "+proc+":  timertaskprocess - starttask")
+          System.out.println(strDate+": "+proc+": timertaskprocess - starttask")
+        ]]></script>
+    </scriptTask>
+    <scriptTask id="timertriggered" name="timertriggered" scriptFormat="groovy" flowable:autoStoreVariables="false">
+      <script><![CDATA[
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.timertaskprocess');
+          java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+          def proc = execution.getVariable("proc")
+
+          logger.info(dateFormat.format(Calendar.getInstance().getTime())+": "+proc+":  timertriggered");
+          System.out.println(dateFormat.format(Calendar.getInstance().getTime())+": "+proc+":  timertriggered");
+
+          def digIdentity = openidm.read("managed/DigitalIdentity/12345");
+          System.out.println("digIdentity !!!!!!!!! "+digIdentity);
+          def twebCisl = openidm.read("managed/TWebCisl/12345");
+          System.out.println("twebCisl  !!!!!!!!! "+twebCisl);
+
+          def content = [absNr : "12345", absPortalStatus: "MZRV", source : "quelle" ]
+          openidm.create("managed/DigitalIdentity", java.util.UUID.randomUUID().toString() , [ clientType: "AZD" ])
+          openidm.create("managed/TWebCisl", java.util.UUID.randomUUID().toString() , content)
+
+          logger.info(dateFormat.format(Calendar.getInstance().getTime())+": "+proc+": leaving timertriggered ");
+          System.out.println(dateFormat.format(Calendar.getInstance().getTime())+": "+proc+": leaving timertriggered");
+      ]]></script>
+    </scriptTask>
+    <userTask id="usertask" name="usertask"/>
+    <boundaryEvent id="sid-030aed2b-5c9a-4aaf-aec0-5c17e3f0d641" attachedToRef="usertask">
+      <timerEventDefinition>
+        <timeDuration>PT3M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <scriptTask id="usertriggeredscript" name="usertriggeredscript" scriptFormat="groovy" flowable:autoStoreVariables="false">
+      <script><![CDATA[
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.timertaskprocess');
+          Date date = Calendar.getInstance().getTime();
+          java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+          String strDate = dateFormat.format(date);
+          def proc = execution.getVariable("proc")
+
+          logger.info(strDate+": "+proc+":  usertriggeredscript");
+          System.out.println(strDate+": "+proc+":  usertriggeredscript");
+
+      ]]></script>
+    </scriptTask>
+    <sequenceFlow id="flow001" sourceRef="starevent" targetRef="starttask"/>
+    <sequenceFlow id="flow005" sourceRef="usertask" targetRef="usertriggeredscript"/>
+    <sequenceFlow id="flow010" sourceRef="timertriggered" targetRef="endevent"/>
+    <sequenceFlow id="sid-21ac7a1c-b7bf-41f8-8a87-1671611f08fd" sourceRef="starttask" targetRef="usertask"/>
+    <sequenceFlow id="sid-8a09c7e9-c247-4086-92c1-e5ed53765c54" sourceRef="sid-030aed2b-5c9a-4aaf-aec0-5c17e3f0d641" targetRef="timertriggered"/>
+    <sequenceFlow id="sid-e359ae77-651a-4aa0-91f8-2f8062ba3fc6" sourceRef="usertriggeredscript" targetRef="endevent"/>
+    <endEvent id="endevent"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_">
+    <bpmndi:BPMNPlane bpmnElement="timertaskprocess" id="BPMNPlane_">
+      <bpmndi:BPMNShape id="shape-22d30eef-8e3b-4e91-921f-6dd6c313ed20" bpmnElement="starevent">
+        <omgdc:Bounds x="-145.0" y="-25.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-c253020e-d11b-4737-ae0d-ca99d8a61cab" bpmnElement="starttask">
+        <omgdc:Bounds x="-50.0" y="-50.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-261e4a63-75d4-469a-849e-d155a7f6a0b0" bpmnElement="flow001">
+        <omgdi:waypoint x="-115.0" y="-10.0"/>
+        <omgdi:waypoint x="-50.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-2c4995eb-89c1-4a24-bf91-31b8c3993fae" bpmnElement="timertriggered">
+        <omgdc:Bounds x="250.0" y="-60.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-fcb2cfce-694a-4f21-aba2-29a56992b6af" bpmnElement="endevent">
+        <omgdc:Bounds x="395.0" y="-25.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-09c3ba97-96d3-48c1-bc9a-6d393d0b4623" bpmnElement="flow005">
+        <omgdi:waypoint x="120.0" y="30.000002"/>
+        <omgdi:waypoint x="120.0" y="100.0"/>
+        <omgdi:waypoint x="205.0" y="100.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-8a350b4a-2320-48ce-af75-56910d4341ae" bpmnElement="flow010">
+        <omgdi:waypoint x="350.0" y="-20.0"/>
+        <omgdi:waypoint x="395.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-1bf578c0-c1b6-4a34-b6a3-54fedccabde0" bpmnElement="usertask">
+        <omgdc:Bounds x="95.0" y="-50.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-5ea3cda9-774c-49e8-b3ff-57e542f60525" bpmnElement="sid-21ac7a1c-b7bf-41f8-8a87-1671611f08fd">
+        <omgdi:waypoint x="50.0" y="-10.0"/>
+        <omgdi:waypoint x="82.5" y="-10.0"/>
+        <omgdi:waypoint x="95.0" y="-10.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-f0d08ac7-ec9d-4813-a5e1-881871f7f3fd" bpmnElement="sid-030aed2b-5c9a-4aaf-aec0-5c17e3f0d641">
+        <omgdc:Bounds x="180.0058" y="-37.864582" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-e042073d-ebac-4bac-95a7-479c4c0b8d38" bpmnElement="sid-8a09c7e9-c247-4086-92c1-e5ed53765c54">
+        <omgdi:waypoint x="210.0058" y="-22.864582"/>
+        <omgdi:waypoint x="250.00002" y="-20.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-7e6b1ca4-1362-4b38-809e-a7eb6baf0e41" bpmnElement="usertriggeredscript">
+        <omgdc:Bounds x="205.0" y="60.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-2c689161-2606-4bfa-9f0f-30aaf7d8f270" bpmnElement="sid-e359ae77-651a-4aa0-91f8-2f8062ba3fc6">
+        <omgdi:waypoint x="305.0" y="80.0"/>
+        <omgdi:waypoint x="395.0" y="-2.5"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

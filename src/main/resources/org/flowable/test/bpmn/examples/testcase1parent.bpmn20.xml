@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="parentProcess1" name="parentProcess1" isExecutable="true">
+
+    <startEvent id="starevent"/>
+
+    <scriptTask id="scripttask1" name="scripttask1" scriptFormat="groovy" activiti:autoStoreVariables="false">
+        <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.parentProcess1")
+                System.out.println("parentProcess1 - starttask")
+                logger.info("parentProcess1 - starttask")
+        ]]>
+        </script>
+    </scriptTask>
+
+    <callActivity id="callActiviti" name="callActiviti" calledElement="subProcess1" activiti:inheritVariables="false"/>
+
+    <scriptTask id="aftercallactiviti" name="aftercallactiviti" scriptFormat="groovy" activiti:autoStoreVariables="false">
+        <script><![CDATA[
+                def logger = org.slf4j.LoggerFactory.getLogger("de.allianz.security.cim.idm.workflow.parentProcess1")
+                System.out.println("parentProcess1 - aftercallactiviti")
+                logger.info("parentProcess1 - aftercallactiviti")
+        ]]>
+        </script>
+    </scriptTask>
+
+    <endEvent id="endevent"/>
+
+    <sequenceFlow id="start-script" sourceRef="starevent" targetRef="scripttask1"/>
+    <sequenceFlow id="script-callactiviti" sourceRef="scripttask1" targetRef="callActiviti"/>
+    <sequenceFlow id="callactiviti-aftercallactiviti" sourceRef="callActiviti" targetRef="aftercallactiviti"/>
+    <sequenceFlow id="aftercallactiviti-endevent" sourceRef="aftercallactiviti" targetRef="endevent"/>
+  </process>
+</definitions>

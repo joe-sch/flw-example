@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="subprocess" name="subprocess" isExecutable="true">
+    <startEvent id="start"/>
+    <endEvent id="end"/>
+    <scriptTask id="scripttask" name="prepareWorkflow" scriptFormat="groovy" flowable:autoStoreVariables="false">
+        <script><![CDATA[
+          def logger = org.slf4j.LoggerFactory.getLogger('org.sample.workflow.subprocess')
+          System.out.println("sub1Process - scripttask, value for key2 is: [" + key2 + "] (should be same as value for parent key1 [value1])")
+          System.out.println("sub1Process - scripttask, value for mtemplateId is: [" + mtemplateId + "] (should be same as value for parent key1 [value1])")
+          logger.info("sub1Process - scripttask, value for key2 is: [" + key2 + "] (should be same as value for parent key1 [value1])")
+          logger.info("sub1Process - scripttask, value for mtemplateId is: [" + mtemplateId + "] (should be same as value for parent key1 [value1])")
+        ]]>
+        </script>
+    </scriptTask>
+    <sequenceFlow id="flow000" sourceRef="start" targetRef="scripttask"/>
+    <sequenceFlow id="flow010" sourceRef="scripttask" targetRef="end"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_subprocess">
+    <bpmndi:BPMNPlane bpmnElement="subprocess" id="BPMNPlane_subprocess">
+      <bpmndi:BPMNShape id="shape-cd429655-a959-4748-b254-bba56085f92f" bpmnElement="start">
+        <omgdc:Bounds x="-105.0" y="-30.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-31deb731-8661-4d85-9702-0e002f286475" bpmnElement="end">
+        <omgdc:Bounds x="160.0" y="-30.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-9608c332-a5f9-40c3-9758-7bb7987e0127" bpmnElement="scripttask">
+        <omgdc:Bounds x="-20.0" y="-55.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-243d6a01-6987-4ab9-bd4e-2c0d1ad117c0" bpmnElement="flow000">
+        <omgdi:waypoint x="-75.0" y="-15.0"/>
+        <omgdi:waypoint x="-20.0" y="-15.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-d0f3e1dc-7938-4737-b9d6-ea7214cd4609" bpmnElement="flow010">
+        <omgdi:waypoint x="80.0" y="-15.0"/>
+        <omgdi:waypoint x="160.0" y="-15.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
